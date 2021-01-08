@@ -324,17 +324,24 @@ void IRWriter::fuzz() {
             continue;
         }
         size_t len_slot = Config::get()->get_size(string(callee->getName()));
+        size_t integer_slot = Config::get()->get_integer(string(callee->getName()));
 
         IRBuilder<> builder(e);
 
         GlobalVariable* gv_b = get_global_buffer(*e->getModule(), true);
         GlobalVariable* gv_s = get_global_size(*e->getModule(), true);
+        GlobalVariable* gv_i = get_global_integer(*e->getModule(), true);
 
         Value* n0 = builder.CreateLoad(gv_b);
+
         this->set_argument(*e, *n0, fuzz_slot - 1);
         if(len_slot != 0) {
             Value* n1 = builder.CreateLoad(gv_s);
             this->set_argument(*e, *n1, len_slot - 1);
+        }
+        if(integer_slot != 0) {
+            Value* n2 = builder.CreateLoad(gv_i);
+            this->set_argument(*e, *n2, len_slot - 1);
         }
 
         this->set_modified(*e);

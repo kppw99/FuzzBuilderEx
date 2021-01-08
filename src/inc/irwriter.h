@@ -20,7 +20,7 @@ class IRWriter {
 		const string GLOBAL_INTEGER_PREFIX = "fuzzbuilder_integer";
 		const string COLLECT_PATH = "/tmp/fuzzbuilder.collect";
 		const string SPLITTER = "fuzzbuilder=============\n";
-        const string INTEGER_FORMAT = "Integer : %d\n";
+        const string INTEGER_FORMAT = "%d\n";
 		Function* f;
 
 		GlobalVariable* get_global_buffer(Module& m, const bool is_user);
