@@ -8,10 +8,14 @@
 #include "llvm/IR/IRBuilder.h"
 #include "llvm/Support/raw_ostream.h"
 
+#include <iostream>
+
 using namespace llvm;
+using namespace std;
 
 string IRWriter::GLOBAL_BUFFER = "";
 string IRWriter::GLOBAL_SIZE = "";
+string IRWriter::GLOBAL_INTEGER = "";
 set<Instruction*> IRWriter::MODIFIED;
 
 GlobalVariable* IRWriter::get_global_buffer(Module& m, const bool is_user) {
@@ -45,6 +49,28 @@ GlobalVariable* IRWriter::get_global_size(Module& m, const bool is_user) {
     if(gv == nullptr) {
         gv = dyn_cast<GlobalVariable>(
             m.getOrInsertGlobal(GLOBAL_SIZE, Type::getInt32Ty(m.getContext())));
+        if(is_user) {
+            gv->setLinkage(GlobalValue::ExternalLinkage);
+        }
+        else {
+            gv->setLinkage(GlobalValue::CommonLinkage);
+            gv->setInitializer(ConstantInt::get(Type::getInt32Ty(m.getContext()), 0));
+        }
+    }
+
+    return gv;
+}
+
+
+GlobalVariable* IRWriter::get_global_integer(Module& m, const bool is_user) {
+    if(GLOBAL_INTEGER.empty()) {
+        GLOBAL_INTEGER = Loader::get()->get_unique_global_variable_name(GLOBAL_INTEGER_PREFIX);
+    }
+
+    GlobalVariable* gv = m.getGlobalVariable(GLOBAL_INTEGER); 
+    if(gv == nullptr) {
+        gv = dyn_cast<GlobalVariable>(
+            m.getOrInsertGlobal(GLOBAL_INTEGER, Type::getInt32Ty(m.getContext())));
         if(is_user) {
             gv->setLinkage(GlobalValue::ExternalLinkage);
         }
@@ -162,6 +188,18 @@ Function* IRWriter::get_strlen_function(Module& m) {
     Type* rty = Type::getInt32Ty(m.getContext());
     FunctionType* fty = FunctionType::get(rty, ptys, false);
     return dyn_cast<Function>(m.getOrInsertFunction("strlen", fty));
+}
+
+Function* IRWriter::get_dprintf_function(Module& m) { 
+    vector<Type*> ptys = {
+        Type::getInt32Ty(m.getContext()),
+        Type::getInt8PtrTy(m.getContext()),
+        Type::getInt32Ty(m.getContext())
+    };
+
+    Type* rty = Type::getInt32Ty(m.getContext());
+    FunctionType* fty = FunctionType::get(rty, ptys, false);
+    return dyn_cast<Function>(m.getOrInsertFunction("dprintf", fty));
 }
 
 void IRWriter::set_argument(Instruction& i, Value& v, size_t idx) {
@@ -382,6 +420,9 @@ void IRWriter::collect() {
         size = builder.CreateCall(get_strlen_function(module),
             { buffer });
     }
+	
+	Value* integer = this->f->arg_begin() + 
+        (Config::get()->get_integer(string(this->f->getName())));
 
     Value* fd = builder.CreateAlloca(Type::getInt32Ty(module.getContext()));
     Value* path = builder.CreateGlobalString(COLLECT_PATH);
@@ -390,6 +431,9 @@ void IRWriter::collect() {
     Value* splitter = builder.CreateGlobalString(SPLITTER);
     Value* splitter_size = builder.getInt32(SPLITTER.size());
     Value* newline = builder.CreateGlobalString("\n");
+
+	Value* integer_format = builder.CreateGlobalString(INTEGER_FORMAT);
+	Value* integer_format_size = builder.getInt32(INTEGER_FORMAT.size());
 
     Value* cmp = builder.CreateICmpUGT(size, builder.getInt32(1));
     builder.CreateCondBr(cmp, entry2, link);
@@ -413,11 +457,15 @@ void IRWriter::collect() {
         { call, buffer, size });
     Value* call5 = builder.CreateCall(get_write_function(module),
         { call, builder.CreateInBoundsGEP(newline, {builder.getInt32(0), builder.getInt32(0)}), builder.getInt32(1) });
-    Value* call6 = builder.CreateCall(get_write_function(module),
+	
+    Value* call6 = builder.CreateCall(get_dprintf_function(module),
+	    { call, builder.CreateInBoundsGEP(integer_format, {builder.getInt32(0), builder.getInt32(0)}), integer });
+
+    Value* call7 = builder.CreateCall(get_write_function(module),
         { call, builder.CreateInBoundsGEP(splitter, {builder.getInt32(0), builder.getInt32(0)}), splitter_size });
-    Value* call7 = builder.CreateCall(get_flock_function(module),
+    Value* call8 = builder.CreateCall(get_flock_function(module),
         { call, builder.getInt32(8)} );
-    Value* call8 = builder.CreateCall(get_close_function(module),
+    Value* call9 = builder.CreateCall(get_close_function(module),
         { call });
     builder.CreateBr(link);
 

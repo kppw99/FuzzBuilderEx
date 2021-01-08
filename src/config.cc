@@ -9,18 +9,23 @@
 #include <assert.h>
 #include <iostream>
 
-void Config::Target::init(string name, size_t fuzz, size_t len) {
+void Config::Target::init(string name, size_t fuzz, size_t len, size_t integer) {
     this->name = name;
     this->fuzz = fuzz;
     this->len = len;
+	this->integer = integer;
 }
 
 Config::Target::Target(string name, size_t fuzz) {
-    init(name, fuzz, 0);
+    init(name, fuzz, 0, 0);
 }
 
 Config::Target::Target(string name, size_t fuzz, size_t len) {
-    init(name, fuzz, len);
+    init(name, fuzz, len, 0);
+}
+
+Config::Target::Target(string name, size_t fuzz, size_t len, size_t integer) {
+    init(name, fuzz, len, integer);
 }
 
 bool Config::Target::is_target(const string src) const {
@@ -42,6 +47,10 @@ size_t Config::Target::get_size() const {
     return this->len;
 }
 
+size_t Config::Target::get_integer() const {
+    return this->integer;
+}
+
 Config* Config::instance = nullptr;
 
 Config::Target* Config::make_target(const rapidjson::Value& v) const {
@@ -54,6 +63,7 @@ Config::Target* Config::make_target(const rapidjson::Value& v) const {
     string name = "";
     size_t fuzz = 0;
     size_t len = 0;
+    size_t integer = 0;
 
     if(v.Size() > 0 && v[0].IsString()) {
         name = v[0].GetString();
@@ -64,6 +74,9 @@ Config::Target* Config::make_target(const rapidjson::Value& v) const {
     }
     if(v.Size() > 2 && v[2].IsInt()) {
         len = v[2].GetInt();
+    }
+    if(v.Size() > 3 && v[3].IsInt()) {
+        integer = v[3].GetInt();
     }
 
     if (name.empty() || fuzz == 0) {
@@ -111,6 +124,15 @@ size_t Config::get_size(string name) const {
     for(auto e : this->targets) {
         if (e->get_name() == name) {
             return e->get_size();
+        }
+    }
+    return 0;
+}
+
+size_t Config::get_integer(string name) const {
+    for(auto e : this->targets) {
+        if (e->get_name() == name) {
+            return e->get_integer();
         }
     }
     return 0;
