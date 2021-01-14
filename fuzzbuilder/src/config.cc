@@ -143,7 +143,7 @@ bool Config::parse_cmd(int argc, char* argv[]) {
         this->type = string(argv[1]);
         this->path = string(argv[2]);
 
-        if (this->type != "exec" && this->type != "seed") {
+        if (this->type != "exec" && this->type != "opt" && this->type != "seed") {
             return false;
         }
 
