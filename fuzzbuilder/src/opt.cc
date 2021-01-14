@@ -17,32 +17,19 @@ Opt::~Opt()
 
 char* Opt::strrstr(const char* haystack, const char* needle)
 {
-	int haystack_len;
-	int needle_len;
-	char *ptr;
+	if (*needle == '\0')
+		return (char *) haystack;
 
-	haystack_len = strlen(haystack);
-	needle_len = strlen(needle);
-
-	if(needle_len == 0) {
-		return (char *)haystack;
-	}
-
-	if(needle_len > haystack_len) {
-		return NULL;
-	}
-
-	ptr = (char *)haystack + haystack_len - needle_len;
-
-	while(1) {
-		if(strncmp(ptr, needle, needle_len) == 0) {
-			return ptr;
-		}
-		if(ptr == haystack) {
+	char *result = NULL;
+	for (;;) {
+		char *p = (char *)strstr(haystack, needle);
+		if (p == NULL)
 			break;
-		}
+		result = p;
+		haystack = p + 1;
 	}
-	return NULL;
+
+	return result;
 }
 
 void Opt::make_optName(const char* fileName, char* tempName, char* targetName)
