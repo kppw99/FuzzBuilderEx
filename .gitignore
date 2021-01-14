@@ -56,3 +56,4 @@ build
 *.bc
 *.ll
 *.swp
+tags
