@@ -152,6 +152,56 @@ bool Config::parse_cmd(int argc, char* argv[]) {
     return false;
 }
 
+bool Config::parse_opt_conf() {
+	static bool PARSE_CONF_FLAG = false;
+	if (PARSE_CONF_FLAG == true) {
+		return false;
+	}
+
+	FILE* filep;
+	char buffer[0xFFFF];
+	rapidjson::Document d;
+	filep = fopen((this->path).c_str(), "rb");
+	if(filep == nullptr) {
+		Logger::get()->log(ERROR, "[" + this->path + "] File Not Found");
+		return false;
+	}
+	rapidjson::FileReadStream frs(filep, buffer, sizeof(buffer));
+	d.ParseStream(frs);
+	fclose(filep);
+
+	if(!d.IsObject()) {
+		Logger::get()->log(ERROR, "[" + this->path + "] Wrong Json Format");
+		return false;
+	}
+
+	if(d.HasMember(this->CONF_SKIP.c_str())) {
+		for(rapidjson::SizeType i = 0; i < d[CONF_SKIP.c_str()].Size(); ++i) {
+			if (!d[CONF_SKIP.c_str()][i].IsString()) {
+				Logger::get()->log(ERROR, "[" + CONF_SKIP + "] Invalid Configurati  on");
+				this->clean();
+				return false;
+			}
+			skips.push_back(d[CONF_SKIP.c_str()][i].GetString());
+		}
+	}
+
+	if(d.HasMember(this->CONF_FILE.c_str())) {
+		for(rapidjson::SizeType i = 0; i < d[CONF_FILE.c_str()].Size(); ++i) {
+			if (!d[CONF_FILE.c_str()][i].IsString()) {
+				Logger::get()->log(ERROR, "[" + CONF_FILE + "] Invalid Configurati  on");
+				this->clean();
+				return false;
+			}
+			files.push_back(d[CONF_FILE.c_str()][i].GetString());
+		}
+	}
+
+	this->print(DEBUG);
+
+	return true;
+}
+
 bool Config::parse_conf() {
     static bool PARSE_CONF_FLAG = false;
     if (PARSE_CONF_FLAG == true) {
@@ -235,8 +285,15 @@ bool Config::is_exec() const {
     return false;
 }
 
+bool Config::is_opt() const {
+	if (this->type == "opt") {
+		return true;
+	}
+	return false;
+}
+
 void Config::print_usage() const {
-    Logger::get()->log(INFO, "./fuzzbuilder ${type}[exec|seed] ${config_path}");
+    Logger::get()->log(INFO, "./fuzzbuilder ${type}[exec|opt|seed] ${config_path}");
 }
 
 void Config::print(log_level level) const {

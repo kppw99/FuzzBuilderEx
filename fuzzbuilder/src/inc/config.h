@@ -62,8 +62,10 @@ class Config {
 
         bool parse_cmd(int argc, char* argv[]);
         bool parse_conf();
+		bool parse_opt_conf();
 
         bool is_exec() const;
+		bool is_opt() const;
 
         void print_usage() const;
         void print(log_level level) const;
