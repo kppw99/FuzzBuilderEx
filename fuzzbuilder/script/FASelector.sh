@@ -25,7 +25,7 @@ function main {
     cp $S $P/
 
     if [ $# -ne 3 ]; then usage; fi
-    python3 $P/$S $1 $2 $3
+    python3.7 $P/$S $1 $2 $3
 
     log "Generated seed conf folder is \"seeds.conf\""
 }
