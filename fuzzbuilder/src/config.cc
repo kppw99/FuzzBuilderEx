@@ -9,18 +9,23 @@
 #include <assert.h>
 #include <iostream>
 
-void Config::Target::init(string name, size_t fuzz, size_t len) {
+void Config::Target::init(string name, size_t fuzz, size_t len, size_t integer) {
     this->name = name;
     this->fuzz = fuzz;
     this->len = len;
+	this->integer = integer;
 }
 
 Config::Target::Target(string name, size_t fuzz) {
-    init(name, fuzz, 0);
+    init(name, fuzz, 0, 0);
 }
 
 Config::Target::Target(string name, size_t fuzz, size_t len) {
-    init(name, fuzz, len);
+    init(name, fuzz, len, 0);
+}
+
+Config::Target::Target(string name, size_t fuzz, size_t len, size_t integer) {
+    init(name, fuzz, len, integer);
 }
 
 bool Config::Target::is_target(const string src) const {
@@ -42,6 +47,10 @@ size_t Config::Target::get_size() const {
     return this->len;
 }
 
+size_t Config::Target::get_integer() const {
+    return this->integer;
+}
+
 Config* Config::instance = nullptr;
 
 Config::Target* Config::make_target(const rapidjson::Value& v) const {
@@ -54,6 +63,7 @@ Config::Target* Config::make_target(const rapidjson::Value& v) const {
     string name = "";
     size_t fuzz = 0;
     size_t len = 0;
+    size_t integer = 0;
 
     if(v.Size() > 0 && v[0].IsString()) {
         name = v[0].GetString();
@@ -64,6 +74,9 @@ Config::Target* Config::make_target(const rapidjson::Value& v) const {
     }
     if(v.Size() > 2 && v[2].IsInt()) {
         len = v[2].GetInt();
+    }
+    if(v.Size() > 3 && v[3].IsInt()) {
+        integer = v[3].GetInt();
     }
 
     if (name.empty() || fuzz == 0) {
@@ -116,6 +129,15 @@ size_t Config::get_size(string name) const {
     return 0;
 }
 
+size_t Config::get_integer(string name) const {
+    for(auto e : this->targets) {
+        if (e->get_name() == name) {
+            return e->get_integer();
+        }
+    }
+    return 0;
+}
+
 vector<string> Config::get_targets() const {
     vector<string> ret;
 
@@ -143,13 +165,63 @@ bool Config::parse_cmd(int argc, char* argv[]) {
         this->type = string(argv[1]);
         this->path = string(argv[2]);
 
-        if (this->type != "exec" && this->type != "seed") {
+        if (this->type != "exec" && this->type != "opt" && this->type != "seed") {
             return false;
         }
 
         return true;
     }
     return false;
+}
+
+bool Config::parse_opt_conf() {
+	static bool PARSE_CONF_FLAG = false;
+	if (PARSE_CONF_FLAG == true) {
+		return false;
+	}
+
+	FILE* filep;
+	char buffer[0xFFFF];
+	rapidjson::Document d;
+	filep = fopen((this->path).c_str(), "rb");
+	if(filep == nullptr) {
+		Logger::get()->log(ERROR, "[" + this->path + "] File Not Found");
+		return false;
+	}
+	rapidjson::FileReadStream frs(filep, buffer, sizeof(buffer));
+	d.ParseStream(frs);
+	fclose(filep);
+
+	if(!d.IsObject()) {
+		Logger::get()->log(ERROR, "[" + this->path + "] Wrong Json Format");
+		return false;
+	}
+
+	if(d.HasMember(this->CONF_SKIP.c_str())) {
+		for(rapidjson::SizeType i = 0; i < d[CONF_SKIP.c_str()].Size(); ++i) {
+			if (!d[CONF_SKIP.c_str()][i].IsString()) {
+				Logger::get()->log(ERROR, "[" + CONF_SKIP + "] Invalid Configurati  on");
+				this->clean();
+				return false;
+			}
+			skips.push_back(d[CONF_SKIP.c_str()][i].GetString());
+		}
+	}
+
+	if(d.HasMember(this->CONF_FILE.c_str())) {
+		for(rapidjson::SizeType i = 0; i < d[CONF_FILE.c_str()].Size(); ++i) {
+			if (!d[CONF_FILE.c_str()][i].IsString()) {
+				Logger::get()->log(ERROR, "[" + CONF_FILE + "] Invalid Configurati  on");
+				this->clean();
+				return false;
+			}
+			files.push_back(d[CONF_FILE.c_str()][i].GetString());
+		}
+	}
+
+	this->print(DEBUG);
+
+	return true;
 }
 
 bool Config::parse_conf() {
@@ -235,8 +307,15 @@ bool Config::is_exec() const {
     return false;
 }
 
+bool Config::is_opt() const {
+	if (this->type == "opt") {
+		return true;
+	}
+	return false;
+}
+
 void Config::print_usage() const {
-    Logger::get()->log(INFO, "./fuzzbuilder ${type}[exec|seed] ${config_path}");
+    Logger::get()->log(INFO, "./fuzzbuilder ${type}[exec|opt|seed] ${config_path}");
 }
 
 void Config::print(log_level level) const {
