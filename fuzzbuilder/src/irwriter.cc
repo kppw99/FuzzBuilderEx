@@ -419,6 +419,7 @@ void IRWriter::collect() {
     Value* buffer = this->f->arg_begin() +
         (Config::get()->get_fuzz(string(this->f->getName())) - 1);
     Value* size = nullptr;
+    Value* integer = nullptr;
 
     if(Config::get()->get_size(string(this->f->getName())) != 0) {
         size = this->f->arg_begin() +
@@ -428,8 +429,13 @@ void IRWriter::collect() {
             { buffer });
     }
 	
-	Value* integer = this->f->arg_begin() + 
-        (Config::get()->get_integer(string(this->f->getName())));
+    if(Config::get()->get_integer(string(this->f->getName())) != 0) {
+        integer = this->f->arg_begin() +
+            (Config::get()->get_integer(string(this->f->getName())) - 1 );
+    } else {
+        integer = builder.CreateCall(get_strlen_function(module),
+            { buffer });
+    }
 
     Value* fd = builder.CreateAlloca(Type::getInt32Ty(module.getContext()));
     Value* path = builder.CreateGlobalString(COLLECT_PATH);
