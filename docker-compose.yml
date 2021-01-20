@@ -1,0 +1,19 @@
+version: '3'
+
+services:
+    fuzzbuilderex:
+        build:
+            context: .
+            dockerfile: ./Dockerfile
+        image: fuzzbuilder:latest
+
+    c-ares_pre:
+        build:
+            context: .
+            dockerfile: ./projects/c-ares/pre.Dockerfile
+        image: c-ares_pre:latest
+    c-ares:
+        build:
+            context: .
+            dockerfile: ./projects/c-ares/Dockerfile
+        image: c-ares:latest
