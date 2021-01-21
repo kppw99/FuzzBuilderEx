@@ -5,6 +5,17 @@ S="FASelector.py"
 
 log () { echo "[*] $1"; }
 
+function installPython37 {
+    mkdir tmp && cd tmp
+    wget https://www.python.org/ftp/python/3.7.0/Python-3.7.0.tar.xz
+    tar xvf Python-3.7.0.tar.xz
+    cd Python-3.7.0
+    ./configure
+    make altinstall
+    cd ../../
+    rm -rf tmp
+}
+
 function checkDependency {
     if ! [ -d "$P" ]; then
         log "No Parser exist!"
@@ -13,6 +24,8 @@ function checkDependency {
     else
         log "Using exist Parser"
     fi
+
+    [[ "$(python3.7 -V)" =~ "Python 3" ]] || installPython37
 }
 
 function usage {
