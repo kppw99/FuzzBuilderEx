@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 P="Parser"
 S="FASelector.py"
@@ -29,7 +29,7 @@ function checkDependency {
 }
 
 function usage {
-    python3 $P/$S -h
+    python3.7 $P/$S -h
     exit
 }
 
