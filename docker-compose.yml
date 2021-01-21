@@ -17,3 +17,25 @@ services:
             context: .
             dockerfile: ./projects/c-ares/Dockerfile
         image: c-ares:latest
+
+    boringssl_pre:
+        build:
+            context: .
+            dockerfile: ./projects/boringssl/pre.Dockerfile
+        image: boringssl_pre:latest
+    boringssl:
+        build:
+            context: .
+            dockerfile: ./projects/boringssl/Dockerfile
+        image: boringssl:latest
+
+    json-c_pre:
+        build:
+            context: .
+            dockerfile: ./projects/json-c/pre.Dockerfile
+        image: json-c_pre:latest
+    json_c:
+        build:
+            context: .
+            dockerfile: ./projects/json-c/Dockerfile
+        image: json-c:latest
