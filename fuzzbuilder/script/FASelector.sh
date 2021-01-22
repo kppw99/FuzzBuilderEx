@@ -2,6 +2,7 @@
 
 P="Parser"
 S="FASelector.py"
+python="python3.7"
 
 log () { echo "[*] $1"; }
 
@@ -29,7 +30,7 @@ function checkDependency {
 }
 
 function usage {
-    python3.7 $P/$S -h
+    $python $P/$S -h
     exit
 }
 
@@ -38,7 +39,7 @@ function main {
     cp $S $P/
 
     if [ $# -ne 3 ]; then usage; fi
-    python3.7 $P/$S $1 $2 $3
+    $python $P/$S $1 $2 $3
 
     log "Generated seed conf folder is \"seeds.conf\""
 }
