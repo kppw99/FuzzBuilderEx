@@ -1,5 +1,7 @@
 FROM fuzzbuilderex:base
 
+LABEL maintainer="onsoim <onsoim@gmail.com>"
+
 # [expat]
 ENV NAME expat
 
