@@ -21,15 +21,14 @@ RUN mkdir -p /exp/boringssl/seed/fuzzbuilder && mv seed_fb /exp/boringssl/seed/f
 WORKDIR /exp/boringssl/source/boringssl/crypto
 RUN if [ "$flag" = "true" ]; then \
 		/tool/fuzzbuilder opt /exp/boringssl/CBS_crypto_opt.conf;\
-		afl-clang++ -emit-llvm -DBORINGSSL_ALLOW_CXX_RUNTIME -DBORINGSSL_IMPLEMENTATION -DOPENSSL_NO_ASM -I../third_party/googletest/include -I../include -m32 -DBORINGSSL_UNSAFE_FUZZER_MODE -Werror -Wformat=2 -Wsign-compare -Wmissing-field-initializers -Wwrite-strings -Wall -ggdb -fvisibility=hidden -fno-common -Wnewline-eof -fcolor-diagnostics -Wimplicit-fallthrough -Wmissing-declarations -std=c++11 -Wmissing-prototypes -Wshadow -c ./test/gtest_main.cc ecdh_extra/ecdh_test_opt.cc evp/evp_test_opt.cc obj/obj_test_opt.cc fipsmodule/ec/ec_test_opt.cc fipsmodule/bn/bn_test_opt.cc bytestring/bytestring_test_opt.cc pkcs8/pkcs12_test_opt.cc digest_extra/digest_test_opt.cc pkcs7/pkcs7_test_opt.cc dh/dh_test.cc;\
-		mv ecdh_extra/ecdh_test_opt.bc ecdh_extra/ecdh_test.bc;\
-		mv evp/evp_test_opt.bc evp/evp_test.bc;\
-		mv fipsmodule/ec/ec_test_opt.bc fipsmodule/ec/ec_test.bc;\
-		mv fipsmodule/bn/bn_test_opt.bc fipsmodule/bn/bn_test.bc;\
-		mv bytestring/bytestring_test_opt.bc bytestring/bytestring_test.bc;\
-		mv pkcs8/pkcs12_test_opt.bc pkcs8/pkcs12_test.bc;\
-		mv digest_extra/digest_test_opt.bc digest_extra/digest_test.bc;\
-		mv pkcs7/pkcs7_test_opt.bc pkcs7/pkcs7_test.bc;\
+		afl-clang++ -emit-llvm -DBORINGSSL_ALLOW_CXX_RUNTIME -DBORINGSSL_IMPLEMENTATION -DOPENSSL_NO_ASM -I../third_party/googletest/include -I../include -m32 -DBORINGSSL_UNSAFE_FUZZER_MODE -Wformat=2 -Wsign-compare -Wmissing-field-initializers -Wwrite-strings -Wall -ggdb -fvisibility=hidden -fno-common -Wnewline-eof -fcolor-diagnostics -Wimplicit-fallthrough -Wmissing-declarations -std=c++11 -Wmissing-prototypes -Wunused-value -Wshadow -c ./test/gtest_main.cc ecdh_extra/ecdh_test_opt.cc evp/evp_test_opt.cc obj/obj_test.cc fipsmodule/ec/ec_test.cc fipsmodule/bn/bn_test_opt.cc bytestring/bytestring_test_opt.cc pkcs8/pkcs12_test_opt.cc digest_extra/digest_test_opt.cc pkcs7/pkcs7_test_opt.cc dh/dh_test.cc;\
+		mv ecdh_test_opt.bc ecdh_test.bc;\
+		mv evp_test_opt.bc evp_test.bc;\
+		mv bn_test_opt.bc bn_test.bc;\
+		mv bytestring_test_opt.bc bytestring_test.bc;\
+		mv pkcs12_test_opt.bc pkcs12_test.bc;\
+		mv digest_test_opt.bc digest_test.bc;\
+		mv pkcs7_test_opt.bc pkcs7_test.bc;\
 	else\
 		afl-clang++ -emit-llvm -DBORINGSSL_ALLOW_CXX_RUNTIME -DBORINGSSL_IMPLEMENTATION -DOPENSSL_NO_ASM -I../third_party/googletest/include -I../include -m32 -DBORINGSSL_UNSAFE_FUZZER_MODE -Werror -Wformat=2 -Wsign-compare -Wmissing-field-initializers -Wwrite-strings -Wall -ggdb -fvisibility=hidden -fno-common -Wnewline-eof -fcolor-diagnostics -Wimplicit-fallthrough -Wmissing-declarations -std=c++11 -Wmissing-prototypes -Wshadow -c ./test/gtest_main.cc ecdh_extra/ecdh_test.cc evp/evp_test.cc obj/obj_test.cc fipsmodule/ec/ec_test.cc fipsmodule/bn/bn_test.cc bytestring/bytestring_test.cc pkcs8/pkcs12_test.cc digest_extra/digest_test.cc pkcs7/pkcs7_test.cc dh/dh_test.cc;\
 	fi
@@ -39,12 +38,12 @@ RUN AFL_USE_ASAN=1 afl-clang++ -m32 -g -Werror -Wformat=2 -Wsign-compare -Wmissi
 
 RUN if [ "$flag" = "true" ]; then \
 		/tool/fuzzbuilder opt /exp/boringssl/BIO_crypto_opt.conf;\
-		afl-clang++ -emit-llvm -DBORINGSSL_ALLOW_CXX_RUNTIME -DBORINGSSL_IMPLEMENTATION -DOPENSSL_NO_ASM -I../third_party/googletest/include -I../include -m32 -DBORINGSSL_UNSAFE_FUZZER_MODE -Werror -Wformat=2 -Wsign-compare -Wmissing-field-initializers -Wwrite-strings -Wall -ggdb -fvisibility=hidden -fno-common -Wnewline-eof -fcolor-diagnostics -Wimplicit-fallthrough -Wmissing-declarations -std=c++11 -Wmissing-prototypes -Wshadow -c ./test/gtest_main.cc bio/bio_test_opt.cc pem/pem_test_opt.cc pkcs7/pkcs7_test_opt.cc pkcs8/pkcs12_test_opt.cc ../crypto_test_data.cc x509/x509_test_opt.cc;\
-		mv bio/bio_test_opt.bc bio/bio_test.bc;\
-		mv pem/pem_test_opt.bc pem/pem_test.bc;\
-		mv pkcs7/pkcs7_test_opt.bc pkcs7/pkcs7_test.bc;\
-		mv pkcs8/pkcs12_test_opt.bc pkcs8/pkcs12_test.bc;\
-		mv x509/x509_test_opt.bc x509/x509_test.bc;\
+		afl-clang++ -emit-llvm -DBORINGSSL_ALLOW_CXX_RUNTIME -DBORINGSSL_IMPLEMENTATION -DOPENSSL_NO_ASM -I../third_party/googletest/include -I../include -m32 -DBORINGSSL_UNSAFE_FUZZER_MODE -Wformat=2 -Wsign-compare -Wmissing-field-initializers -Wwrite-strings -Wall -ggdb -fvisibility=hidden -fno-common -Wnewline-eof -fcolor-diagnostics -Wimplicit-fallthrough -Wmissing-declarations -std=c++11 -Wmissing-prototypes -Wunused-value -Wshadow -c ./test/gtest_main.cc bio/bio_test_opt.cc pem/pem_test_opt.cc pkcs7/pkcs7_test_opt.cc pkcs8/pkcs12_test_opt.cc ../crypto_test_data.cc x509/x509_test_opt.cc;\
+		mv bio_test_opt.bc bio_test.bc;\
+		mv pem_test_opt.bc pem_test.bc;\
+		mv pkcs7_test_opt.bc pkcs7_test.bc;\
+		mv pkcs12_test_opt.bc pkcs12_test.bc;\
+		mv x509_test_opt.bc x509_test.bc;\
 	else \
 		afl-clang++ -emit-llvm -DBORINGSSL_ALLOW_CXX_RUNTIME -DBORINGSSL_IMPLEMENTATION -DOPENSSL_NO_ASM -I../third_party/googletest/include -I../include -m32 -DBORINGSSL_UNSAFE_FUZZER_MODE -Werror -Wformat=2 -Wsign-compare -Wmissing-field-initializers -Wwrite-strings -Wall -ggdb -fvisibility=hidden -fno-common -Wnewline-eof -fcolor-diagnostics -Wimplicit-fallthrough -Wmissing-declarations -std=c++11 -Wmissing-prototypes -Wshadow -c ./test/gtest_main.cc bio/bio_test.cc pem/pem_test.cc pkcs7/pkcs7_test.cc pkcs8/pkcs12_test.cc ../crypto_test_data.cc x509/x509_test.cc;\
 	fi
@@ -57,7 +56,7 @@ RUN mkdir -p /exp/boringssl/bin/fuzz/fuzzbuilder && mv /exp/boringssl/source/bor
 WORKDIR /exp/boringssl/source/boringssl/ssl
 RUN if [ "$flag" = "true" ]; then \
 		/tool/fuzzbuilder opt /exp/boringssl/BIO_ssl_opt.conf;\
-		afl-clang++ -emit-llvm -DBORINGSSL_ALLOW_CXX_RUNTIME -DBORINGSSL_IMPLEMENTATION -DOPENSSL_NO_ASM -I../third_party/googletest/include -I../include -m32 -DBORINGSSL_UNSAFE_FUZZER_MODE -Werror -Wformat=2 -Wsign-compare -Wmissing-field-initializers -Wwrite-strings -Wall -ggdb -fvisibility=hidden -fno-common -Wnewline-eof -fcolor-diagnostics -Wimplicit-fallthrough -Wmissing-declarations -std=c++11 -Wmissing-prototypes -Wshadow -c ../crypto/test/gtest_main.cc ssl_test_opt.cc;\
+		afl-clang++ -emit-llvm -DBORINGSSL_ALLOW_CXX_RUNTIME -DBORINGSSL_IMPLEMENTATION -DOPENSSL_NO_ASM -I../third_party/googletest/include -I../include -m32 -DBORINGSSL_UNSAFE_FUZZER_MODE -Wformat=2 -Wsign-compare -Wmissing-field-initializers -Wwrite-strings -Wall -ggdb -fvisibility=hidden -fno-common -Wnewline-eof -fcolor-diagnostics -Wimplicit-fallthrough  -Wunused-value -Wmissing-declarations -std=c++11 -Wmissing-prototypes -Wshadow -c ../crypto/test/gtest_main.cc ssl_test_opt.cc;\
 		mv ssl_test_opt.bc ssl_test.bc;\
 	else \
 		afl-clang++ -emit-llvm -DBORINGSSL_ALLOW_CXX_RUNTIME -DBORINGSSL_IMPLEMENTATION -DOPENSSL_NO_ASM -I../third_party/googletest/include -I../include -m32 -DBORINGSSL_UNSAFE_FUZZER_MODE -Werror -Wformat=2 -Wsign-compare -Wmissing-field-initializers -Wwrite-strings -Wall -ggdb -fvisibility=hidden -fno-common -Wnewline-eof -fcolor-diagnostics -Wimplicit-fallthrough -Wmissing-declarations -std=c++11 -Wmissing-prototypes -Wshadow -c ../crypto/test/gtest_main.cc ssl_test.cc;\
