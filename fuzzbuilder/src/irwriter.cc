@@ -318,11 +318,15 @@ void IRWriter::fuzz() {
         if(callee == nullptr) {
             continue;
         }
+		/*
         size_t fuzz_slot = Config::get()->get_fuzz(string(callee->getName()));
         if(fuzz_slot == 0) {
             Logger::get()->log(WARN, "Unexpected Target (" + string(callee->getName()));
             continue;
         }
+		*/
+
+        size_t fuzz_slot = Config::get()->get_fuzz(string(callee->getName()));
         size_t len_slot = Config::get()->get_size(string(callee->getName()));
         size_t integer_slot = Config::get()->get_integer(string(callee->getName()));
 
@@ -332,16 +336,21 @@ void IRWriter::fuzz() {
         GlobalVariable* gv_s = get_global_size(*e->getModule(), true);
         GlobalVariable* gv_i = get_global_integer(*e->getModule(), true);
 
-        Value* n0 = builder.CreateLoad(gv_b);
+		//Value* n0 = builder.CreateLoad(gv_b);
+        //this->set_argument(*e, *n0, fuzz_slot - 1);
+		if(fuzz_slot != 0) {
+			Value* n0 = builder.CreateLoad(gv_b);
+			this->set_argument(*e, *n0, fuzz_slot - 1);
+		}
 
-        this->set_argument(*e, *n0, fuzz_slot - 1);
         if(len_slot != 0) {
-            Value* n1 = builder.CreateLoad(gv_s);
-            this->set_argument(*e, *n1, len_slot - 1);
+			Value* n1 = builder.CreateLoad(gv_s);
+			this->set_argument(*e, *n1, len_slot - 1);
         }
+
         if(integer_slot != 0) {
-            Value* n2 = builder.CreateLoad(gv_i);
-            this->set_argument(*e, *n2, len_slot - 1);
+			Value* n2 = builder.CreateLoad(gv_i);
+			this->set_argument(*e, *n2, len_slot - 1);
         }
 
         this->set_modified(*e);
@@ -416,11 +425,25 @@ void IRWriter::collect() {
 
     BasicBlock* entry2 = BasicBlock::Create(ctx, "", this->f);
 
-    Value* buffer = this->f->arg_begin() +
-        (Config::get()->get_fuzz(string(this->f->getName())) - 1);
-    Value* size = nullptr;
+    //Value* buffer = this->f->arg_begin() + (Config::get()->get_fuzz(string(this->f->getName())) - 1);
+    Value* buffer = nullptr;
+	Value* size = nullptr;
     Value* integer = nullptr;
+	
+    if(Config::get()->get_fuzz(string(this->f->getName())) != 0) {
+        buffer = this->f->arg_begin() +
+            (Config::get()->get_fuzz(string(this->f->getName())) - 1 );
 
+    	if(Config::get()->get_size(string(this->f->getName())) != 0) {
+        	size = this->f->arg_begin() +
+            	(Config::get()->get_size(string(this->f->getName())) - 1 );
+    	} else {
+        	size = builder.CreateCall(get_strlen_function(module),
+            	{ buffer });
+    	}
+    }
+
+/*
     if(Config::get()->get_size(string(this->f->getName())) != 0) {
         size = this->f->arg_begin() +
             (Config::get()->get_size(string(this->f->getName())) - 1 );
@@ -428,6 +451,7 @@ void IRWriter::collect() {
         size = builder.CreateCall(get_strlen_function(module),
             { buffer });
     }
+*/
 	
     if(Config::get()->get_integer(string(this->f->getName())) != 0) {
         integer = this->f->arg_begin() +
@@ -465,13 +489,20 @@ void IRWriter::collect() {
             builder.getInt32(1) });
     Value* call4 = builder.CreateCall(get_write_function(module),
         { call, buffer, size });
-    Value* call5 = builder.CreateCall(get_write_function(module),
-        { call, builder.CreateInBoundsGEP(newline, {builder.getInt32(0), builder.getInt32(0)}), builder.getInt32(1) });
+    
+	if (buffer != nullptr)
+	{	
+		Value* call5 = builder.CreateCall(get_write_function(module),
+			{ call, builder.CreateInBoundsGEP(newline, {builder.getInt32(0), builder.getInt32(0)}), builder.getInt32(1) });
+	}
+	
+	//Value* call5 = builder.CreateCall(get_write_function(module),
+        //{ call, builder.CreateInBoundsGEP(newline, {builder.getInt32(0), builder.getInt32(0)}), builder.getInt32(1) });
 	
 	if (integer != nullptr)
 	{
-    	Value* call6 = builder.CreateCall(get_dprintf_function(module),	
-	    	{ call, builder.CreateInBoundsGEP(integer_format, {builder.getInt32(0), builder.getInt32(0)}), integer });
+		Value* call6 = builder.CreateCall(get_dprintf_function(module),	
+			{ call, builder.CreateInBoundsGEP(integer_format, {builder.getInt32(0), builder.getInt32(0)}), integer });
 	}
 
     //Value* call6 = builder.CreateCall(get_dprintf_function(module),
