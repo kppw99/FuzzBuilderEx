@@ -432,9 +432,6 @@ void IRWriter::collect() {
     if(Config::get()->get_integer(string(this->f->getName())) != 0) {
         integer = this->f->arg_begin() +
             (Config::get()->get_integer(string(this->f->getName())) - 1 );
-    } else {
-        integer = builder.CreateCall(get_strlen_function(module),
-            { buffer });
     }
 
     Value* fd = builder.CreateAlloca(Type::getInt32Ty(module.getContext()));
@@ -471,8 +468,14 @@ void IRWriter::collect() {
     Value* call5 = builder.CreateCall(get_write_function(module),
         { call, builder.CreateInBoundsGEP(newline, {builder.getInt32(0), builder.getInt32(0)}), builder.getInt32(1) });
 	
-    Value* call6 = builder.CreateCall(get_dprintf_function(module),
-	    { call, builder.CreateInBoundsGEP(integer_format, {builder.getInt32(0), builder.getInt32(0)}), integer });
+	if (integer != nullptr)
+	{
+    	Value* call6 = builder.CreateCall(get_dprintf_function(module),	
+	    	{ call, builder.CreateInBoundsGEP(integer_format, {builder.getInt32(0), builder.getInt32(0)}), integer });
+	}
+
+    //Value* call6 = builder.CreateCall(get_dprintf_function(module),
+	    //{ call, builder.CreateInBoundsGEP(integer_format, {builder.getInt32(0), builder.getInt32(0)}), integer });
 
     Value* call7 = builder.CreateCall(get_write_function(module),
         { call, builder.CreateInBoundsGEP(splitter, {builder.getInt32(0), builder.getInt32(0)}), splitter_size });
