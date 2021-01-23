@@ -50,3 +50,13 @@ services:
             context: .
             dockerfile: ./projects/libhtp/Dockerfile
         image: libhtp:latest
+
+    expat_pre:
+        build: 
+            context: ./projects/expat
+            dockerfile: pre.Dockerfile
+        image: fuzzbuilderex:expat_pre
+    expat:
+        build:
+            context: ./projects/expat
+        image: fuzzbuilderex:expat
