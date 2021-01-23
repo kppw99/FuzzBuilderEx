@@ -4,11 +4,49 @@ services:
     fuzzbuilderex:
         build:
             context: .
-            dockerfile: ./FuzzBuilder.Dockerfile
-        image: fuzzbuilder:v2
+            dockerfile: ./Dockerfile
+        image: fuzzbuilder:latest
 
+    c-ares_pre:
+        build:
+            context: .
+            dockerfile: ./projects/c-ares/pre.Dockerfile
+        image: c-ares_pre:latest
     c-ares:
         build:
             context: .
-            dockerfile: ./projects/c-ares/c-ares.Dockerfile
+            dockerfile: ./projects/c-ares/Dockerfile
         image: c-ares:latest
+
+    boringssl_pre:
+        build:
+            context: .
+            dockerfile: ./projects/boringssl/pre.Dockerfile
+        image: boringssl_pre:latest
+    boringssl:
+        build:
+            context: .
+            dockerfile: ./projects/boringssl/Dockerfile
+        image: boringssl:latest
+
+    json-c_pre:
+        build:
+            context: .
+            dockerfile: ./projects/json-c/pre.Dockerfile
+        image: json-c_pre:latest
+    json_c:
+        build:
+            context: .
+            dockerfile: ./projects/json-c/Dockerfile
+        image: json-c:latest
+
+    libhtp_pre:
+        build:
+            context: .
+            dockerfile: ./projects/libhtp/pre.Dockerfile
+        image: libhtp_pre:latest
+    libhtp:
+        build:
+            context: .
+            dockerfile: ./projects/libhtp/Dockerfile
+        image: libhtp:latest

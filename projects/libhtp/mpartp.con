@@ -1,0 +1,5 @@
+{
+    "targets" : [ [ "htp_mpartp_parse", 2, 3 ] ],
+    "files" : [ "test_main.bc", "test_utils.bc", "gtest_main.bc", "test_multipart.bc", "test_bench.bc", "test_bstr.bc", "test_hybrid.bc", "test_gunzip.bc", "gtest-all.bc", "test.bc" ]
+}
+
