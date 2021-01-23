@@ -5,6 +5,8 @@ MAINTAINER Sanghoon(Kevin) Jeon <kppw99@gmail.com>
 ENV PATH=$PATH:/tool/afl-2.52b
 ENV AFL_PATH=/tool/afl-2.52b
 ENV srcdir=/exp/libhtp/source/libhtp/test/files/
+ARG opt=production
+ENV opt_flag=$opt
 
 # Generate seed file
 WORKDIR /exp/libhtp/source/libhtp
@@ -23,7 +25,14 @@ RUN mv seed_fb /exp/libhtp/seed/fuzzbuilder/org
 WORKDIR /exp/libhtp/source/libhtp
 RUN make clean && make
 WORKDIR /exp/libhtp/source/libhtp/test
-RUN afl-clang++ -emit-llvm -DHAVE_CONFIG_H -I. -I..  -I.. -I../htp -Wno-write-strings -DGTEST_USE_OWN_TR1_TUPLE=1 -D_GNU_SOURCE -g -Wall -Wextra -Wno-unused-parameter -Wno-sign-compare -O2  -m32 -MT test_main.o -MD -MP -MF $depbase.Tpo -c gtest/gtest_main.cc gtest/gtest-all.cc test_main.cpp test_utils.cpp test_multipart.cpp test_bench.cpp test_bstr.cpp test_hybrid.cpp test_gunzip.cpp
+RUN if [ "$opt_flag" = "true" ]; then \
+		/tool/fuzzbuilder opt /exp/libhtp/opt.conf;\
+		afl-clang++ -emit-llvm -DHAVE_CONFIG_H -I. -I..  -I.. -I../htp -Wno-write-strings -DGTEST_USE_OWN_TR1_TUPLE=1 -D_GNU_SOURCE -g -Wall -Wextra -Wno-unused-parameter -Wno-sign-compare -O2  -m32 -MT test_main.o -MD -MP -MF $depbase.Tpo -c gtest/gtest_main.cc gtest/gtest-all.cc test_main.cpp test_utils_opt.cpp test_multipart.cpp test_bench.cpp test_bstr_opt.cpp test_hybrid.cpp test_gunzip.cpp;\
+		mv test_utils_opt.bc test_utils.bc;\
+		mv test_bstr_opt.bc test_bstr.bc;\
+	else \
+		afl-clang++ -emit-llvm -DHAVE_CONFIG_H -I. -I..  -I.. -I../htp -Wno-write-strings -DGTEST_USE_OWN_TR1_TUPLE=1 -D_GNU_SOURCE -g -Wall -Wextra -Wno-unused-parameter -Wno-sign-compare -O2  -m32 -MT test_main.o -MD -MP -MF $depbase.Tpo -c gtest/gtest_main.cc gtest/gtest-all.cc test_main.cpp test_utils.cpp test_multipart.cpp test_bench.cpp test_bstr.cpp test_hybrid.cpp test_gunzip.cpp;\
+	fi
 RUN afl-clang -emit-llvm -DHAVE_CONFIG_H -I. -I..  -I.. -I../htp -Wno-write-strings -DGTEST_USE_OWN_TR1_TUPLE=1 -D_GNU_SOURCE -g -Wall -Wextra -Wno-unused-parameter -Wno-sign-compare -O2 -D_GNU_SOURCE -g -Wall -Wextra -std=gnu99 -pedantic -Wextra -Wno-missing-field-initializers -Wshadow -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wno-unused-parameter -m32 -O2 -Wstrict-overflow=1 -fstack-protector -D_FORTIFY_SOURCE=2 -Wformat -Wformat-security -fPIC -MT test.o -MD -MP -MF $depbase.Tpo -c test.c
 RUN /tool/fuzzbuilder exec /exp/libhtp/htp_mpartp_parse.conf
 RUN afl-clang++ -DHAVE_CONFIG_H -I. -I..  -I.. -I../htp -Wno-write-strings -DGTEST_USE_OWN_TR1_TUPLE=1 -D_GNU_SOURCE -g -Wall -Wextra -Wno-unused-parameter -Wno-sign-compare -O2 -m32 -c -o test_main.o test_main.bc
