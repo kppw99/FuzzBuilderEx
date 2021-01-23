@@ -39,3 +39,14 @@ services:
             context: .
             dockerfile: ./projects/json-c/Dockerfile
         image: json-c:latest
+
+    libhtp_pre:
+        build:
+            context: .
+            dockerfile: ./projects/libhtp/pre.Dockerfile
+        image: libhtp_pre:latest
+    libhtp:
+        build:
+            context: .
+            dockerfile: ./projects/libhtp/Dockerfile
+        image: libhtp:latest

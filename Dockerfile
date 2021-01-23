@@ -4,13 +4,13 @@ LABEL maintainer="onsoim <onsoim@gmail.com>"
 
 # Install Basic Development Packages
 RUN apt-get -y update && \
-    DEBIAN_FRONTEND=noninteractive apt-get -y install git wget build-essential cmake gcc-multilib g++-multilib gnupg zip autoconf automake libtool docbook2x zlib1g-dev rapidjson-dev apt-transport-https ca-certificates apt-utils vim gnuplot
+    DEBIAN_FRONTEND=noninteractive apt-get -y install git wget build-essential cmake gcc-multilib g++-multilib gnupg zip autoconf automake libtool docbook2x zlib1g-dev rapidjson-dev apt-transport-https ca-certificates apt-utils vim gnuplot software-properties-common
 
 # Install LLVM Development Package
 RUN echo "#LLVM Repository" >> /etc/apt/sources.list && \
-    echo "deb http://apt.llvm.org/stretch/ llvm-toolchain-stretch-6.0 main" >> /etc/apt/sources.list && \
+	echo "deb http://apt.llvm.org/stretch/ llvm-toolchain-stretch-6.0 main" >> /etc/apt/sources.list && \
     echo "deb-src http://apt.llvm.org/stretch/ llvm-toolchain-stretch-6.0 main" >> /etc/apt/sources.list && \
-    wget -O ./key.gpg https://apt.llvm.org/llvm-snapshot.gpg.key --no-check-certificate && \
+	wget -O ./key.gpg https://apt.llvm.org/llvm-snapshot.gpg.key --no-check-certificate && \
     apt-key add < ./key.gpg && \
     rm ./key.gpg && \
     apt-get -y update && \
