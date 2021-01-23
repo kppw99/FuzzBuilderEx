@@ -17,5 +17,5 @@ RUN chmod +x build_new.sh && ./build_new.sh seed
 WORKDIR /tool
 RUN bash FASelector.sh /exp/expat/source/libexpat/expat/lib/.libs/libexpat.a /exp/expat/source/libexpat/expat/tests/runtests /exp/expat/source/libexpat/expat/
 
-# docker build -t fuzzbuilder:expat_v1 . -f v1.Dockerfile
-# docker cp 9177b5c6a2a8:/tool/seeds.conf .
+# docker build -t fuzzbuilderex:expat_pre . -f pre.Dockerfile
+# docker cp 979c9d89bdd4:/tool/seeds.conf .

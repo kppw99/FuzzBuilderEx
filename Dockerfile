@@ -40,4 +40,4 @@ RUN mkdir -p /exp/oss-fuzz && cd /exp/oss-fuzz && \
     cd /exp/oss-fuzz/source && \
     git checkout a55a1276d9e0c453f588160b7e3581cdf6236013
 
-# docker build -t fuzzbuilder:Base . -f Dockerfile
+# docker build -t fuzzbuilderex:base .
