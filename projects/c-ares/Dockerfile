@@ -4,6 +4,8 @@ MAINTAINER Sanghoon(Kevin) Jeon <kppw99@gmail.com>
 # Set environment variable of afl-gcc, afl-g++
 ENV PATH=$PATH:/tool/afl-2.52b
 ENV AFL_PATH=/tool/afl-2.52b
+ARG opt=production
+ENV flag=$opt
 
 # Generate seed file
 WORKDIR /exp/c-ares/source/c-ares
@@ -19,7 +21,26 @@ RUN mkdir -p /exp/c-ares/seed/fuzzbuilder && mv /exp/c-ares/source/c-ares/test/s
 
 # Generate executable files
 WORKDIR /exp/c-ares/source/c-ares/test
-RUN afl-clang++ -emit-llvm -DHAVE_CONFIG_H -I. -I.. -isystem gmock-1.8.0 -m32 -g -Wall -pthread -c ares-test-main.cc ares-test-misc.cc ares-test.cc ares-test-internal.cc dns-proto.cc ares-test-parse-a.cc ares-test-parse.cc ares-test-parse-aaaa.cc ares-test-parse-ptr.cc ares-test-parse-ns.cc ares-test-parse-srv.cc ares-test-parse-txt.cc ares-test-parse-soa.cc ares-test-parse-naptr.cc ares-test-parse-mx.cc
+RUN if [ "$flag" = "true" ]; then \
+		/tool/fuzzbuilder opt /exp/c-ares/opt.conf;\
+		afl-clang++ -emit-llvm -DHAVE_CONFIG_H -I. -I.. -isystem gmock-1.8.0 -m32 -g -Wall -pthread -c ares-test-main.cc ares-test-misc_opt.cc ares-test_opt.cc ares-test-internal_opt.cc dns-proto.cc ares-test-parse-a_opt.cc ares-test-parse_opt.cc ares-test-parse-aaaa_opt.cc ares-test-parse-ptr_opt.cc ares-test-parse-ns_opt.cc ares-test-parse-srv_opt.cc ares-test-parse-txt_opt.cc ares-test-parse-soa_opt.cc ares-test-parse-naptr_opt.cc ares-test-parse-mx_opt.cc;\
+		mv ares-test_opt.bc ares-test.bc;\
+		mv ares-test-misc_opt.bc ares-test-misc.bc;\
+		mv ares-test-internal_opt.bc ares-test-internal.bc;\
+		mv ares-test-parse-a_opt.bc ares-test-parse-a.bc;\
+		mv ares-test-parse_opt.bc ares-test-parse.bc;\
+		mv ares-test-parse-aaaa_opt.bc ares-test-parse-aaaa.bc;\
+		mv ares-test-parse-ptr_opt.bc ares-test-parse-ptr.bc;\
+		mv ares-test-parse-ns_opt.bc ares-test-parse-ns.bc;\
+		mv ares-test-parse-srv_opt.bc ares-test-parse-srv.bc;\
+		mv ares-test-parse-mx_opt.bc ares-test-parse-mx.bc;\
+		mv ares-test-parse-txt_opt.bc ares-test-parse-txt.bc;\
+		mv ares-test-parse-soa_opt.bc ares-test-parse-soa.bc;\
+		mv ares-test-parse-naptr_opt.bc ares-test-parse-naptr.bc;\
+	else \
+		afl-clang++ -emit-llvm -DHAVE_CONFIG_H -I. -I.. -isystem gmock-1.8.0 -m32 -g -Wall -pthread -c ares-test-main.cc ares-test-misc.cc ares-test.cc ares-test-internal.cc dns-proto.cc ares-test-parse-a.cc ares-test-parse.cc ares-test-parse-aaaa.cc ares-test-parse-ptr.cc ares-test-parse-ns.cc ares-test-parse-srv.cc ares-test-parse-txt.cc ares-test-parse-soa.cc ares-test-parse-naptr.cc ares-test-parse-mx.cc; \
+	fi
+
 RUN /tool/fuzzbuilder exec /exp/c-ares/ares_create_query.conf
 RUN afl-clang++ -DHAVE_CONFIG_H -I. -I.. -isystem gmock-1.8.0 -m32 -g -Wall -pthread -c ares-test-main.bc.mod.bc ares-test-misc.bc.mod.bc ares-test.bc.mod.bc ares-test-internal.bc.mod.bc dns-proto.bc.mod.bc
 RUN AFL_USE_ASAN=1 afl-clang++ -m32 -Wall -pthread -o ares_create_query_fuzzer ares-test-main.bc.mod.o ares-test-misc.bc.mod.o ares-test.bc.mod.o ares-test-internal.bc.mod.o dns-proto.bc.mod.o .libs/libgmock.a ../.libs/libcares.a
@@ -34,4 +55,7 @@ RUN rm -rf /exp/c-ares/seed/fuzzbuilder/org/ares_parse_*_reply && mkdir -p /exp/
 WORKDIR /exp/c-ares
 RUN afl-cmin -m 1024 -i /exp/c-ares/seed/fuzzbuilder/org/ares_create_query -o /exp/c-ares/seed/fuzzbuilder/opt/ares_create_query /exp/c-ares/bin/fuzz/fuzzbuilder/ares_create_query_fuzzer @@
 RUN afl-cmin -m 1024 -i /exp/c-ares/seed/fuzzbuilder/org/ares_parse_reply -o /exp/c-ares/seed/fuzzbuilder/opt/ares_parse_reply /exp/c-ares/bin/fuzz/fuzzbuilder/ares_parse_reply_fuzzer @@
+
 WORKDIR /
+
+# docker build -t c-ares:latest . -f Dockerfile --build-arg opt=true
