@@ -79,7 +79,7 @@ Config::Target* Config::make_target(const rapidjson::Value& v) const {
         integer = v[3].GetInt();
     }
 
-    if (name.empty() || fuzz == 0) {
+    if (name.empty()) {
         return t;
     }
 
