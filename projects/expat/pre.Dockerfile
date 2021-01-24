@@ -14,6 +14,7 @@ WORKDIR /exp/expat/source/libexpat/expat
 RUN chmod +x build_new.sh && ./build_new.sh seed
 
 # 3. FASelector
+WORKDIR /tool
 RUN bash FASelector.sh /exp/expat/source/libexpat/expat/lib/.libs/libexpat.a /exp/expat/source/libexpat/expat/tests/runtests /exp/expat/source/libexpat/expat/
 
 # docker build -t fuzzbuilderex:expat_pre . -f pre.Dockerfile
