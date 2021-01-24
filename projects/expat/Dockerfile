@@ -3,6 +3,7 @@ FROM fuzzbuilderex:expat_pre
 LABEL maintainer="onsoim <onsoim@gmail.com>"
 
 COPY ./seed.conf /exp/expat/
+COPY ./exec.conf /exp/expat/
 
 # 2. FuzzBuilder (seed)
 WORKDIR /exp/expat/source/libexpat/expat
