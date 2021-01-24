@@ -72,7 +72,7 @@ def main():
                             'files': [ f"{candidates['candidates'][filename]['filename'].split('.')[0]}.bc" ]
                         }
                         
-                        with open(f'{path}/{p[0]}_{params[1]}.conf', 'w', encoding='utf-8') as f:
+                        with open(f'{path}/{params[1]}_{p[0]}.conf', 'w', encoding='utf-8') as f:
                             f.write(f'# {i}\n')
                             json.dump(candidate, f, indent=4)
 

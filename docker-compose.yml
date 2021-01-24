@@ -20,14 +20,13 @@ services:
 
     boringssl_pre:
         build:
-            context: .
-            dockerfile: ./projects/boringssl/pre.Dockerfile
-        image: boringssl_pre:latest
+            context: ./projects/boringssl
+            dockerfile: pre.Dockerfile
+        image: fuzzbuilderex:boringssl_pre
     boringssl:
         build:
-            context: .
-            dockerfile: ./projects/boringssl/Dockerfile
-        image: boringssl:latest
+            context: ./projects/boringssl
+        image: fuzzbuilderex:boringssl
 
     json-c_pre:
         build:
@@ -50,3 +49,13 @@ services:
             context: .
             dockerfile: ./projects/libhtp/Dockerfile
         image: libhtp:latest
+
+    expat_pre:
+        build: 
+            context: ./projects/expat
+            dockerfile: pre.Dockerfile
+        image: fuzzbuilderex:expat_pre
+    expat:
+        build:
+            context: ./projects/expat
+        image: fuzzbuilderex:expat

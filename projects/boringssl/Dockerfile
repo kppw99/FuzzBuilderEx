@@ -1,5 +1,6 @@
-FROM boringssl_pre:latest
-MAINTAINER Sanghoon(Kevin) Jeon <kppw99@gmail.com>
+FROM fuzzbuilderex:boringssl_pre
+
+LABEL maintainer="onsoim <onsoim@gmail.com>"
 
 # Set environment variable of afl-gcc, afl-g++
 ENV PATH=$PATH:/tool/afl-2.52b
@@ -7,12 +8,24 @@ ENV AFL_PATH=/tool/afl-2.52b
 ARG opt=production
 ENV flag=$opt
 
+COPY ./seed.conf /exp/boringssl/
+
 # Generate seed file
 WORKDIR /exp/boringssl/source/boringssl
-RUN afl-clang -emit-llvm -DBORINGSSL_ALLOW_CXX_RUNTIME -DBORINGSSL_IMPLEMENTATION -DOPENSSL_NO_ASM -Ithird_party/googletest/include -Icrypto/../include -m32 -DBORINGSSL_UNSAFE_FUZZER_MODE -Werror -Wformat=2 -Wsign-compare -Wmissing-field-initializers -Wwrite-strings -Wall -ggdb -fvisibility=hidden -fno-common -Wnewline-eof -fcolor-diagnostics -Wimplicit-fallthrough -Wmissing-prototypes -Wold-style-definition -Wstrict-prototypes -Wshadow -D_XOPEN_SOURCE=700 -c crypto/bytestring/cbs.c crypto/bio/bio_mem.c && afl-clang++ -emit-llvm -DBORINGSSL_ALLOW_CXX_RUNTIME -DBORINGSSL_IMPLEMENTATION -DOPENSSL_NO_ASM -Ithird_party/googletest/include -Iinclude -m32 -DBORINGSSL_UNSAFE_FUZZER_MODE -Werror -Wformat=2 -Wsign-compare -Wmissing-field-initializers -Wwrite-strings -Wall -ggdb -fvisibility=hidden -fno-common -Wnewline-eof -fcolor-diagnostics -Wimplicit-fallthrough -Wmissing-declarations -std=c++11 -Wmissing-prototypes -Wshadow -c ssl/ssl_asn1.cc
+RUN afl-clang -emit-llvm -DBORINGSSL_ALLOW_CXX_RUNTIME -DBORINGSSL_IMPLEMENTATION -DOPENSSL_NO_ASM -Ithird_party/googletest/include -Icrypto/../include -m32 -DBORINGSSL_UNSAFE_FUZZER_MODE -Werror -Wformat=2 -Wsign-compare -Wmissing-field-initializers -Wwrite-strings -Wall -ggdb -fvisibility=hidden -fno-common -Wnewline-eof -fcolor-diagnostics -Wimplicit-fallthrough -Wmissing-prototypes -Wold-style-definition -Wstrict-prototypes -Wshadow -D_XOPEN_SOURCE=700 \
+	-c crypto/bytestring/cbs.c crypto/bio/bio_mem.c crypto/pem/pem_pk8.c crypto/asn1/a_strnid.c
+RUN afl-clang++ -emit-llvm -DBORINGSSL_ALLOW_CXX_RUNTIME -DBORINGSSL_IMPLEMENTATION -DOPENSSL_NO_ASM -Ithird_party/googletest/include -Iinclude -m32 -DBORINGSSL_UNSAFE_FUZZER_MODE -Werror -Wformat=2 -Wsign-compare -Wmissing-field-initializers -Wwrite-strings -Wall -ggdb -fvisibility=hidden -fno-common -Wnewline-eof -fcolor-diagnostics -Wimplicit-fallthrough -Wmissing-declarations -std=c++11 -Wmissing-prototypes -Wshadow \
+    -c ssl/ssl_asn1.cc
+
 RUN /tool/fuzzbuilder seed /exp/boringssl/seed.conf
-RUN afl-clang++ -DBORINGSSL_ALLOW_CXX_RUNTIME -DBORINGSSL_IMPLEMENTATION -DOPENSSL_NO_ASM -m32 -DBORINGSSL_UNSAFE_FUZZER_MODE -Werror -Wformat=2 -Wsign-compare -Wmissing-field-initializers -Wwrite-strings -Wall -ggdb -fvisibility=hidden -fno-common -Wnewline-eof -fcolor-diagnostics -Wimplicit-fallthrough -Wmissing-declarations -std=c++11 -Wmissing-prototypes -Wshadow -c cbs.bc.mod.bc bio_mem.bc.mod.bc ssl_asn1.bc.mod.bc
-RUN mv cbs.bc.mod.o cbs.c.o && mv bio_mem.bc.mod.o bio_mem.c.o && mv ssl_asn1.bc.mod.o ssl_asn1.cc.o && ar r crypto/libcrypto.a cbs.c.o bio_mem.c.o && ar r ssl/libssl.a ssl_asn1.cc.o
+
+RUN afl-clang++ -DBORINGSSL_ALLOW_CXX_RUNTIME -DBORINGSSL_IMPLEMENTATION -DOPENSSL_NO_ASM -m32 -DBORINGSSL_UNSAFE_FUZZER_MODE -Werror -Wformat=2 -Wsign-compare -Wmissing-field-initializers -Wwrite-strings -Wall -ggdb -fvisibility=hidden -fno-common -Wnewline-eof -fcolor-diagnostics -Wimplicit-fallthrough -Wmissing-declarations -std=c++11 -Wmissing-prototypes -Wshadow \
+-c cbs.bc.mod.bc bio_mem.bc.mod.bc ssl_asn1.bc.mod.bc pem_pk8.bc.mod.bc a_strnid.bc.mod.bc
+# need to find where to go {pem_pk8.bc.mod.bc a_strnid.bc.mod.bc}
+RUN mv cbs.bc.mod.o cbs.c.o && mv bio_mem.bc.mod.o bio_mem.c.o && mv ssl_asn1.bc.mod.o ssl_asn1.cc.o && mv pem_pk8.bc.mod.bc pem_pk8.c.o && mv a_strnid.bc.mod.bc a_strnid.c.o
+RUN ar r crypto/libcrypto.a cbs.c.o bio_mem.c.o em_pk8.c.o a_strnid.c.o && \
+    ar r ssl/libssl.a ssl_asn1.cc.o
+
 RUN rm ssl/ssl_test crypto/crypto_test && ninja && (ssl/ssl_test || set ?=0) && (crypto/crypto_test || set ?=0)
 RUN mv /tmp/fuzzbuilder.collect . && python /tool/seed_maker.py fuzzbuilder.collect seed_fb
 RUN mkdir -p /exp/boringssl/seed/fuzzbuilder && mv seed_fb /exp/boringssl/seed/fuzzbuilder/org

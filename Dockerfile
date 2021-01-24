@@ -32,7 +32,6 @@ RUN mkdir -p /fuzzbuilder/build && \
     cmake build .. && \
     make && \
     mv /fuzzbuilder/build/fuzzbuilder /tool/
-COPY projects/ /exp/
 COPY fuzzbuilder/script/ /tool/
 
 # Install OSS-Fuzz
@@ -41,4 +40,4 @@ RUN mkdir -p /exp/oss-fuzz && cd /exp/oss-fuzz && \
     cd /exp/oss-fuzz/source && \
     git checkout a55a1276d9e0c453f588160b7e3581cdf6236013
 
-# docker build -t fuzzbuilder:Base . -f FuzzBuilder.Dockerfile
+# docker build -t fuzzbuilderex:base .

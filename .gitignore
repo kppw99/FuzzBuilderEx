@@ -56,4 +56,7 @@ build
 *.bc
 *.ll
 *.swp
+
+# etc
+.DS_Store
 tags
