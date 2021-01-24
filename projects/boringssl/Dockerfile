@@ -21,11 +21,11 @@ RUN /tool/fuzzbuilder seed /exp/boringssl/seed.conf
 
 RUN afl-clang++ -DBORINGSSL_ALLOW_CXX_RUNTIME -DBORINGSSL_IMPLEMENTATION -DOPENSSL_NO_ASM -m32 -DBORINGSSL_UNSAFE_FUZZER_MODE -Werror -Wformat=2 -Wsign-compare -Wmissing-field-initializers -Wwrite-strings -Wall -ggdb -fvisibility=hidden -fno-common -Wnewline-eof -fcolor-diagnostics -Wimplicit-fallthrough -Wmissing-declarations -std=c++11 -Wmissing-prototypes -Wshadow \
 -c cbs.bc.mod.bc bio_mem.bc.mod.bc ssl_asn1.bc.mod.bc pem_pk8.bc.mod.bc a_strnid.bc.mod.bc
-# need to find where to go {pem_pk8.bc.mod.bc a_strnid.bc.mod.bc}
-RUN mv cbs.bc.mod.o cbs.c.o && mv bio_mem.bc.mod.o bio_mem.c.o && mv ssl_asn1.bc.mod.o ssl_asn1.cc.o && mv pem_pk8.bc.mod.bc pem_pk8.c.o && mv a_strnid.bc.mod.bc a_strnid.c.o
-RUN ar r crypto/libcrypto.a cbs.c.o bio_mem.c.o em_pk8.c.o a_strnid.c.o && \
-    ar r ssl/libssl.a ssl_asn1.cc.o
 
+RUN mv cbs.bc.mod.o cbs.c.o && mv bio_mem.bc.mod.o bio_mem.c.o && mv ssl_asn1.bc.mod.o ssl_asn1.cc.o && mv pem_pk8.bc.mod.bc pem_pk8.c.o && mv a_strnid.bc.mod.bc a_strnid.c.o
+RUN ar r crypto/libcrypto.a cbs.c.o bio_mem.c.o pem_pk8.c.o a_strnid.c.o && \
+    ar r ssl/libssl.a ssl_asn1.cc.o
+# An error occurs when ninja command is executing
 RUN rm ssl/ssl_test crypto/crypto_test && ninja && (ssl/ssl_test || set ?=0) && (crypto/crypto_test || set ?=0)
 RUN mv /tmp/fuzzbuilder.collect . && python /tool/seed_maker.py fuzzbuilder.collect seed_fb
 RUN mkdir -p /exp/boringssl/seed/fuzzbuilder && mv seed_fb /exp/boringssl/seed/fuzzbuilder/org
