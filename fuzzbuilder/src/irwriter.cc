@@ -487,11 +487,13 @@ void IRWriter::collect() {
     Value* call3 = builder.CreateCall(get_write_function(module),
         { call, builder.CreateInBoundsGEP(newline, {builder.getInt32(0), builder.getInt32(0)}),
             builder.getInt32(1) });
-    Value* call4 = builder.CreateCall(get_write_function(module),
-        { call, buffer, size });
+    //Value* call4 = builder.CreateCall(get_write_function(module),
+        //{ call, buffer, size });
     
 	if (buffer != nullptr)
 	{	
+		Value* call4 = builder.CreateCall(get_write_function(module),
+			{ call, buffer, size });
 		Value* call5 = builder.CreateCall(get_write_function(module),
 			{ call, builder.CreateInBoundsGEP(newline, {builder.getInt32(0), builder.getInt32(0)}), builder.getInt32(1) });
 	}
@@ -503,16 +505,18 @@ void IRWriter::collect() {
 	{
 		Value* call6 = builder.CreateCall(get_dprintf_function(module),	
 			{ call, builder.CreateInBoundsGEP(integer_format, {builder.getInt32(0), builder.getInt32(0)}), integer });
+		Value* call7 = builder.CreateCall(get_write_function(module),
+			{ call, builder.CreateInBoundsGEP(newline, {builder.getInt32(0), builder.getInt32(0)}), builder.getInt32(1) });
 	}
 
     //Value* call6 = builder.CreateCall(get_dprintf_function(module),
 	    //{ call, builder.CreateInBoundsGEP(integer_format, {builder.getInt32(0), builder.getInt32(0)}), integer });
 
-    Value* call7 = builder.CreateCall(get_write_function(module),
+    Value* call8 = builder.CreateCall(get_write_function(module),
         { call, builder.CreateInBoundsGEP(splitter, {builder.getInt32(0), builder.getInt32(0)}), splitter_size });
-    Value* call8 = builder.CreateCall(get_flock_function(module),
+    Value* call9 = builder.CreateCall(get_flock_function(module),
         { call, builder.getInt32(8)} );
-    Value* call9 = builder.CreateCall(get_close_function(module),
+    Value* call10 = builder.CreateCall(get_close_function(module),
         { call });
     builder.CreateBr(link);
 
