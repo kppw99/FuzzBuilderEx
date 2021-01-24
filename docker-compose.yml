@@ -5,7 +5,7 @@ services:
         build:
             context: .
             dockerfile: ./Dockerfile
-        image: fuzzbuilder:latest
+        image: fuzzbuilderex:base
 
     c-ares_pre:
         build:
