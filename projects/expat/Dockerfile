@@ -2,6 +2,8 @@ FROM fuzzbuilderex:expat_pre
 
 LABEL maintainer="onsoim <onsoim@gmail.com>"
 
+COPY ./seed.conf /exp/expat/
+
 # 2. FuzzBuilder (seed)
 WORKDIR /exp/expat/source/libexpat/expat
 RUN /tool/afl-2.52b/afl-clang -emit-llvm -DHAVE_CONFIG_H -I. -I.. -DHAVE_EXPAT_CONFIG_H -m32 -g -Wall -Wmissing-prototypes -Wstrict-prototypes -fexceptions -fno-strict-aliasing -c lib/xmlparse.c -fPIC -DPIC && /tool/fuzzbuilder seed /exp/expat/seed.conf && /tool/afl-2.52b/afl-clang -DHAVE_CONFIG_H -I. -I.. -DHAVE_EXPAT_CONFIG_H -m32 -g -Wall -Wmissing-prototypes -Wstrict-prototypes -fexceptions -fno-strict-aliasing -c xmlparse.bc.mod.bc -fPIC -DPIC -o xmlparse.o && ar r lib/.libs/libexpat.a xmlparse.o && rm -f tests/runtests && make check && mv /tmp/fuzzbuilder.collect . && python /tool/seed_maker.py fuzzbuilder.collect seed_fb && mkdir -p /exp/expat/seed/fuzzbuilder && mv /exp/expat/source/libexpat/expat/seed_fb /exp/expat/seed/fuzzbuilder/org
