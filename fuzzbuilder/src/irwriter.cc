@@ -473,14 +473,18 @@ void IRWriter::collect() {
     {
         Value* cmp = builder.CreateICmpUGT(size, builder.getInt32(1));
         builder.CreateCondBr(cmp, entry2, link);
-        builder.SetInsertPoint(entry2);
+        //builder.SetInsertPoint(entry2);
+	}
+	else
+	{
+		builder.CreateBr(entry2);	
 	}
 	
 	/*
 	Value* cmp = builder.CreateICmpUGT(size, builder.getInt32(1));
     builder.CreateCondBr(cmp, entry2, link);
     */
-    //builder.SetInsertPoint(entry2);
+    builder.SetInsertPoint(entry2);
 
 
     Function* func = get_open_function(module);
@@ -528,12 +532,7 @@ void IRWriter::collect() {
         { call, builder.getInt32(8)} );
     Value* call10 = builder.CreateCall(get_close_function(module),
         { call });
-
-	if (buffer != nullptr)
-	{
-		builder.CreateBr(link);	
-	}
-    //builder.CreateBr(link);
+    builder.CreateBr(link);
 
     Logger::get()->log(INFO, "Collect Instrumented at " + string(this->f->getName()));
 }
