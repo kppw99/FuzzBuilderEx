@@ -20,14 +20,13 @@ services:
 
     boringssl_pre:
         build:
-            context: .
-            dockerfile: ./projects/boringssl/pre.Dockerfile
-        image: boringssl_pre:latest
+            context: ./projects/boringssl
+            dockerfile: pre.Dockerfile
+        image: fuzzbuilderex:boringssl_pre
     boringssl:
         build:
-            context: .
-            dockerfile: ./projects/boringssl/Dockerfile
-        image: boringssl:latest
+            context: ./projects/boringssl
+        image: fuzzbuilderex:boringssl
 
     json-c_pre:
         build:
