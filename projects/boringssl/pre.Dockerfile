@@ -1,10 +1,13 @@
-FROM fuzzbuilder:latest
-MAINTAINER Sanghoon(Kevin) Jeon <kppw99@gmail.com>
+FROM fuzzbuilderex:base
+
+LABEL maintainer="onsoim <onsoim@gmail.com>"
 
 # Set environment variable of afl-gcc, afl-g++
 ENV PATH=$PATH:/tool/afl-2.52b
 ENV AFL_PATH=/tool/afl-2.52b
 RUN DEBIAN_FRONTEND=noninteractive apt-get -y install ninja-build golang
+
+COPY . /exp/boringssl/
 
 # Download source code
 RUN mkdir -p /exp/boringssl/source
@@ -19,4 +22,7 @@ WORKDIR /exp/boringssl/source/boringssl
 RUN chmod 744 ./build_new.sh
 RUN rm -f $(find . -name ".bc") && ./build_new.sh seed
 
-WORKDIR /
+WORKDIR /tool
+RUN bash FASelector.sh
+# RUN bash FASelector.sh /exp/boringssl/source/boringssl/ssl/libssl.a /exp/boringssl/source/boringssl/ssl/ssl_test /exp/boringssl/source/boringssl/
+RUN bash FASelector.sh /exp/boringssl/source/boringssl/crypto/libcrypto.a /exp/boringssl/source/boringssl/crypto/crypto_test /exp/boringssl/source/boringssl/
