@@ -469,10 +469,19 @@ void IRWriter::collect() {
 	Value* integer_format = builder.CreateGlobalString(INTEGER_FORMAT);
 	Value* integer_format_size = builder.getInt32(INTEGER_FORMAT.size());
 
-    Value* cmp = builder.CreateICmpUGT(size, builder.getInt32(1));
+    if (size != nullptr)
+    {
+        Value* cmp = builder.CreateICmpUGT(size, builder.getInt32(1));
+        builder.CreateCondBr(cmp, entry2, link);
+        builder.SetInsertPoint(entry2);
+	}
+	
+	/*
+	Value* cmp = builder.CreateICmpUGT(size, builder.getInt32(1));
     builder.CreateCondBr(cmp, entry2, link);
+    */
+    //builder.SetInsertPoint(entry2);
 
-    builder.SetInsertPoint(entry2);
 
     Function* func = get_open_function(module);
 
@@ -500,7 +509,8 @@ void IRWriter::collect() {
 	
 	//Value* call5 = builder.CreateCall(get_write_function(module),
         //{ call, builder.CreateInBoundsGEP(newline, {builder.getInt32(0), builder.getInt32(0)}), builder.getInt32(1) });
-	
+
+
 	if (integer != nullptr)
 	{
 		Value* call6 = builder.CreateCall(get_dprintf_function(module),	
@@ -518,7 +528,12 @@ void IRWriter::collect() {
         { call, builder.getInt32(8)} );
     Value* call10 = builder.CreateCall(get_close_function(module),
         { call });
-    builder.CreateBr(link);
+
+	if (buffer != nullptr)
+	{
+		builder.CreateBr(link);	
+	}
+    //builder.CreateBr(link);
 
     Logger::get()->log(INFO, "Collect Instrumented at " + string(this->f->getName()));
 }
