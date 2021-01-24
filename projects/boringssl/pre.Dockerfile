@@ -23,6 +23,5 @@ RUN chmod 744 ./build_new.sh
 RUN rm -f $(find . -name ".bc") && ./build_new.sh seed
 
 WORKDIR /tool
-RUN bash FASelector.sh
 # RUN bash FASelector.sh /exp/boringssl/source/boringssl/ssl/libssl.a /exp/boringssl/source/boringssl/ssl/ssl_test /exp/boringssl/source/boringssl/
 RUN bash FASelector.sh /exp/boringssl/source/boringssl/crypto/libcrypto.a /exp/boringssl/source/boringssl/crypto/crypto_test /exp/boringssl/source/boringssl/

@@ -40,4 +40,8 @@ RUN mkdir -p /exp/oss-fuzz && cd /exp/oss-fuzz && \
     cd /exp/oss-fuzz/source && \
     git checkout a55a1276d9e0c453f588160b7e3581cdf6236013
 
+# Install FASelector Dependencies
+WORKDIR /tool
+RUN bash FASelector.sh
+
 # docker build -t fuzzbuilderex:base .
