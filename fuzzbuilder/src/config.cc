@@ -79,11 +79,11 @@ Config::Target* Config::make_target(const rapidjson::Value& v) const {
         integer = v[3].GetInt();
     }
 
-    if (name.empty() || fuzz == 0) {
+    if (name.empty()) {
         return t;
     }
 
-    t = new Target(name, fuzz, len);
+    t = new Target(name, fuzz, len, integer);
     return t;
 }
 
@@ -323,6 +323,28 @@ void Config::print(log_level level) const {
 
     size_t cnt = 1;
     for(auto e : this->targets) {
+
+		string target = "";
+
+        if (e->get_fuzz() == 0) {
+            target = e->get_name() + " " + to_string(e->get_integer());
+		}
+        else {
+            target = e->get_name() + " " + to_string(e->get_fuzz());
+            if (e->get_size() == 0) {
+                target += " None";
+            }
+            else {
+                target += to_string(e->get_size());
+				if (e->get_integer() == 0) {
+                    target += "None";
+				}
+                else {
+			        target += to_string(e->get_integer());
+				}
+            }
+		}
+/*
         string target = e->get_name() + " " + to_string(e->get_fuzz());
         if (e->get_size() == 0) {
             target += " None";
@@ -330,6 +352,7 @@ void Config::print(log_level level) const {
         else {
             target += to_string(e->get_size());
         }
+*/
         Logger::get()->log(level, "TARGET #" + to_string(cnt++) + " " + target);
     }
 
