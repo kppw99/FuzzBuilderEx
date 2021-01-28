@@ -7,16 +7,16 @@ services:
             dockerfile: ./Dockerfile
         image: fuzzbuilderex:base
 
-#    c-ares_pre:
-#        build:
-#            context: .
-#            dockerfile: ./projects/c-ares/pre.Dockerfile
-#        image: c-ares_pre:latest
-#    c-ares:
-#        build:
-#            context: .
-#            dockerfile: ./projects/c-ares/Dockerfile
-#        image: c-ares:latest
+    c-ares_pre:
+        build:
+            context: .
+            dockerfile: ./projects/c-ares/pre.Dockerfile
+        image: c-ares_pre:latest
+    c-ares:
+        build:
+            context: .
+            dockerfile: ./projects/c-ares/Dockerfile
+        image: c-ares:latest
 
     boringssl_pre:
         build:
@@ -50,12 +50,12 @@ services:
 #            dockerfile: ./projects/libhtp/Dockerfile
 #        image: libhtp:latest
 
-#    expat_pre:
-#        build: 
-#            context: ./projects/expat
-#            dockerfile: pre.Dockerfile
-#        image: fuzzbuilderex:expat_pre
-#    expat:
-#        build:
-#            context: ./projects/expat
-#        image: fuzzbuilderex:expat
+    expat_pre:
+        build: 
+            context: ./projects/expat
+            dockerfile: pre.Dockerfile
+        image: fuzzbuilderex:expat_pre
+    expat:
+        build:
+            context: ./projects/expat
+        image: fuzzbuilderex:expat

@@ -242,6 +242,7 @@ bool IRWriter::interface() {
 
     GlobalVariable& glob_buf = *(get_global_buffer(module, false));
     GlobalVariable& glob_size = *(get_global_size(module, false));
+    GlobalVariable& glob_integer = *(get_global_integer(module, false));
 
     BasicBlock* entry2 = BasicBlock::Create(ctx, "", this->f);
     BasicBlock* entry3 = BasicBlock::Create(ctx, "", this->f);
@@ -350,7 +351,7 @@ void IRWriter::fuzz() {
 
         if(integer_slot != 0) {
 			Value* n2 = builder.CreateLoad(gv_i);
-			this->set_argument(*e, *n2, len_slot - 1);
+			this->set_argument(*e, *n2, integer_slot - 1);
         }
 
         this->set_modified(*e);
