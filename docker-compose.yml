@@ -5,7 +5,7 @@ services:
         build:
             context: .
             dockerfile: ./Dockerfile
-        image: fuzzbuilder:latest
+        image: fuzzbuilderex:base
 
     c-ares_pre:
         build:
@@ -59,3 +59,18 @@ services:
         build:
             context: ./projects/expat
         image: fuzzbuilderex:expat
+
+    http-parser:
+        build:
+            context: ./projects/http-parser
+        image: fuzzbuilderex:http-parser
+
+    yara:
+        build:
+            context: ./projects/yara
+        image: fuzzbuilderex:yara
+
+    mpc:
+        build:
+            context: ./projects/mpc
+        image: fuzzbuilderex:mpc

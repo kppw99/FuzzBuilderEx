@@ -93,10 +93,10 @@ void Opt::skip_function(const char* source, const char* target, const char* skip
 					token = strtok(NULL, ";");
 					ptr = strrstr(token, ")");
 					if (ptr) {
-						strcpy(ptr, ");\n");
+						strcpy(ptr, ";\n");
 					}
 					memset(line, 0x00, sizeof(line));
-					sprintf(line, "\t(%s", token);
+					sprintf(line, "\t%s", token);
 					fputs(line, w_fp);
 				} else {
 					memset(line, 0x00, sizeof(line));
