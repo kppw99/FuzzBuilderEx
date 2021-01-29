@@ -1,8 +1,10 @@
-FROM fuzzbuilder:v2
+FROM fuzzbuilderex:base
 LABEL maintainer="KDY <ehddud758@gmail.com>"
 
 # [yara]
 # 1. Prepare source codes & project build
+
+COPY . /exp/yara
 RUN mkdir -p /exp/yara/source && cd /exp/yara/source && git clone https://github.com/VirusTotal/yara.git && cd yara && git checkout a3784d3855029bd0ad24071e72746cc0c31b8cba && cp ../../fuzzer_main.cc . && cp ../../build_new.sh . && cp /exp/yara/StandaloneFuzzTargetMain.c . && bash ./build_new.sh seed
 
 # 2. FuzzBuilder (seed)

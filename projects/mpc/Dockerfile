@@ -1,9 +1,11 @@
-FROM fuzzbuilder:v2 
+FROM fuzzbuilderex:base
 LABEL maintainer="KDY <ehddud758@gmail.com>"
 
 
 # [mpc]
 # 1. Prepare source codes & project build
+COPY . /exp/mpc
+
 RUN mkdir -p /exp/mpc/source && cd /exp/mpc/source && git clone https://github.com/orangeduck/mpc.git && cd mpc && cp ../../build_new.sh .
 
 # 2. FuzzBuilder (seed)

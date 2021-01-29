@@ -1,8 +1,10 @@
-FROM fuzzbuilder:v2 
+FROM fuzzbuilderex:base
 LABEL maintainer="KDY <ehddud758@gmail.com>"
 
 # [ http-parser ]
 # 1. Prepare source codes & project build
+COPY . /exp/http-parser
+
 RUN mkdir -p /exp/http-parser/source && cd /exp/http-parser/source && git clone https://github.com/nodejs/http-parser.git && cd http-parser && cp ../../build_new.sh . && bash ./build_new.sh seed
 
 # 2. Fuzzbuilder (seed)

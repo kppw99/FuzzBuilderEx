@@ -28,27 +28,27 @@ services:
             context: ./projects/boringssl
         image: fuzzbuilderex:boringssl
 
-#    json-c_pre:
-#        build:
-#            context: .
-#            dockerfile: ./projects/json-c/pre.Dockerfile
-#        image: json-c_pre:latest
-#    json_c:
-#        build:
-#            context: .
-#            dockerfile: ./projects/json-c/Dockerfile
-#        image: json-c:latest
+    json-c_pre:
+        build:
+            context: .
+            dockerfile: ./projects/json-c/pre.Dockerfile
+        image: json-c_pre:latest
+    json_c:
+        build:
+            context: .
+            dockerfile: ./projects/json-c/Dockerfile
+        image: json-c:latest
 
-#    libhtp_pre:
-#        build:
-#            context: .
-#            dockerfile: ./projects/libhtp/pre.Dockerfile
-#        image: libhtp_pre:latest
-#    libhtp:
-#        build:
-#            context: .
-#            dockerfile: ./projects/libhtp/Dockerfile
-#        image: libhtp:latest
+    libhtp_pre:
+        build:
+            context: .
+            dockerfile: ./projects/libhtp/pre.Dockerfile
+        image: libhtp_pre:latest
+    libhtp:
+        build:
+            context: .
+            dockerfile: ./projects/libhtp/Dockerfile
+        image: libhtp:latest
 
     expat_pre:
         build: 
@@ -59,3 +59,18 @@ services:
         build:
             context: ./projects/expat
         image: fuzzbuilderex:expat
+
+    http-parser:
+        build:
+            context: ./projects/http-parser
+        image: fuzzbuilderex:http-parser
+
+    yara:
+        build:
+            context: ./projects/yara
+        image: fuzzbuilderex:yara
+
+    mpc:
+        build:
+            context: ./projects/mpc
+        image: fuzzbuilderex:mpc
