@@ -10,8 +10,14 @@
 
 
 ## Description of Directory
-- **source:** source code of fuzzbuilderex
-- **projects:** target librares
+(D: directory / F: file)
+- **source:** [D] source code of fuzzbuilderex
+- **projects:** [D] target librares
+- **Dockerfile:** [F] dockerfile for base environment such as os, LLVM, AFL, utils
+- **runner.sh:** [F] script file to build target library
+```
+$ ./runner.sh [project name]
+```
 
 ## About
 This program is authored and maintained by **Sanghoon(Kevin) Jeon**, **Min Soo Ryu**, and **Dong Young Kim**.
