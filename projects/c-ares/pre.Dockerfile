@@ -5,6 +5,8 @@ MAINTAINER Sanghoon(Kevin) Jeon <kppw99@gmail.com>
 ENV PATH=$PATH:/tool/afl-2.52b
 ENV AFL_PATH=/tool/afl-2.52b
 
+COPY . /exp/c-ares/
+
 # Download source code
 RUN mkdir -p /exp/c-ares/source
 WORKDIR /exp/c-ares/source
