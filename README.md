@@ -15,12 +15,12 @@
 - **[F] Dockerfile:** dockerfile for base environment such as os, LLVM, AFL, utils
 - **[F] docker-compose.yml:** docker compose file for fuzzbuilderex, target libraries
 - **[F] runner.sh:** script file to build target library
-```
-$ ./runner.sh [target library name]
-```
 
 ## Usage for FuzzBuilderEx
 ```
+# To build target library with FuzzBuilderEx (using docker)
+$ ./runner.sh [target library name]
+
 # To make seed
 $ ./fuzzbuilderex seed [configuration file]
 
