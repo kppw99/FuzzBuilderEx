@@ -7,6 +7,8 @@ ENV AFL_PATH=/tool/afl-2.52b
 RUN apt-get update && \
 	DEBIAN_FRONTEND=noninteractive apt-get install -y make autoconf automake libtool zlib1g-dev liblzma-dev lib32z1-dev
 
+COPY . /exp/libhtp/
+
 # Download source code
 WORKDIR /exp/libhtp
 RUN mkdir source
