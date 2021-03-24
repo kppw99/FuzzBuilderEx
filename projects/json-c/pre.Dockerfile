@@ -7,6 +7,8 @@ ENV AFL_PATH=/tool/afl-2.52b
 ENV CC=afl-gcc
 ENV CXX=afl-g++
 
+COPY . /exp/json-c/
+
 # Download source code
 RUN mkdir -p /exp/json-c/source
 WORKDIR /exp/json-c/source
