@@ -28,7 +28,7 @@ $ ./fuzzbuilderex seed [configuration file]
 $ ./fuzzbuilderex opt [configuration file]
 
 # To create fuzzing executables
-$ ./fuzzbuilderex exe [configuration file]
+$ ./fuzzbuilderex exec [configuration file]
 ```
 
 ## About
