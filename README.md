@@ -16,7 +16,7 @@
 - **[F] docker-compose.yml:** docker compose file for fuzzbuilderex, target libraries
 - **[F] runner.sh:** script file to build target library
 ```
-$ ./runner.sh [project name]
+$ ./runner.sh [target library name]
 ```
 
 ## Usage for FuzzBuilderEx
