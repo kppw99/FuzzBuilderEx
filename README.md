@@ -31,6 +31,15 @@ $ ./fuzzbuilderex opt [configuration file]
 $ ./fuzzbuilderex exec [configuration file]
 ```
 
+## Publications
+```
+FuzzBuilderEx: Automated Building Seed Corpus and Fuzzing Executables using Test Framework
+
+@article{
+TBD
+}
+```
+
 ## About
 This program is authored and maintained by **Sanghoon(Kevin) Jeon**, **Min Soo Ryu**, and **Dong Young Kim**.
 > Email: kppw99@gmail.com, onsoim@gmail.com, ehddud758@gmail.com
