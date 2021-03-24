@@ -14,6 +14,7 @@
 - **[D] source:** source code of fuzzbuilderex
 - **[D] projects:** target librares
 - **[F] Dockerfile:** dockerfile for base environment such as os, LLVM, AFL, utils
+- **[F] docker-compose.yml:** docker compose file for fuzzbuilderex, target libraries
 - **[F] runner.sh:** script file to build target library
 ```
 $ ./runner.sh [project name]
