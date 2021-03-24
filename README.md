@@ -10,6 +10,12 @@
 - Container: Docker (19.03.6)
 ```
 
+## Description of Directory
+```
+- source: source code of fuzzbuilderex
+- projects: target librares
+```
+
 ## About
 This program is authored and maintained by **Sanghoon(Kevin) Jeon**, **Min Soo Ryu**, and **Dong Young Kim**.
 > Email: kppw99@gmail.com, onsoim@gmail.com, ehddud758@gmail.com
