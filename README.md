@@ -1,3 +1,4 @@
+[![DOI](https://zenodo.org/badge/310195829.svg)](https://zenodo.org/badge/latestdoi/310195829)
 # FuzzBuilderEx: Automated Building Seed Corpus and Fuzzing Executables using Test Framework
 ![FuzzBuilderEx](https://user-images.githubusercontent.com/48042609/112240130-16745e80-8c8b-11eb-9d7f-95436646cfec.png)
 
