@@ -5,12 +5,11 @@
 ![abstract](https://user-images.githubusercontent.com/48042609/112237303-bcbd6580-8c85-11eb-9de2-a077e1992660.png)
 
 ## Prerequisite
-- **OS:** Ubuntu (18.04 LTS)
-- **Container:** Docker (19.03.6)
-
+- **OS:** ubuntu (18.04 LTS)
+- **Container:** docker (19.03.6)
 
 ## Description of Directory
-*(D: directory / F: file)
+*(D: directory / F: file)*
 - **[D] source:** source code of fuzzbuilderex
 - **[D] projects:** target librares
 - **[F] Dockerfile:** dockerfile for base environment such as os, LLVM, AFL, utils
@@ -18,6 +17,18 @@
 - **[F] runner.sh:** script file to build target library
 ```
 $ ./runner.sh [project name]
+```
+
+## Usage for FuzzBuilderEx
+```
+# To make seed
+$ ./fuzzbuilderex seed [configuration file]
+
+# To optimization
+$ ./fuzzbuilderex opt [configuration file]
+
+# To create fuzzing executables
+$ ./fuzzbuilderex exe [configuration file]
 ```
 
 ## About
