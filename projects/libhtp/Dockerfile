@@ -1,4 +1,4 @@
-FROM libhtp_pre:latest
+FROM fuzzbuilderex:libhtp_pre
 MAINTAINER Sanghoon(Kevin) Jeon <kppw99@gmail.com>
 
 # Set environment variable of afl-gcc, afl-g++

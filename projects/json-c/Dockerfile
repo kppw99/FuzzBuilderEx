@@ -1,4 +1,4 @@
-FROM json-c_pre:latest
+FROM fuzzbuilderex:json-c_pre
 MAINTAINER Sanghoon(Kevin) Jeon <kppw99@gmail.com>
 
 # Set environment variable of afl-gcc, afl-g++

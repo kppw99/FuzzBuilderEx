@@ -1,4 +1,4 @@
-FROM fuzzbuilder:latest
+FROM fuzzbuilderex:base
 MAINTAINER Sanghoon(Kevin) Jeon <kppw99@gmail.com>
 
 # Set environment variable of afl-gcc, afl-g++

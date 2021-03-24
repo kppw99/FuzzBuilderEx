@@ -1,4 +1,4 @@
-FROM c-ares_pre:latest
+FROM fuzzbuilderex:c-ares_pre
 MAINTAINER Sanghoon(Kevin) Jeon <kppw99@gmail.com>
 
 # Set environment variable of afl-gcc, afl-g++
