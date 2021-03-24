@@ -10,11 +10,16 @@ $ cmake ../build/src
 $ make all
 ```
 
-## Usage for FASelector
+## How to use FA Selector
 ```
 # Installation FASelector
 $ /bin/bash ./FASelector.sh
 
 # Usage
 $ /bin/bash ./FASelector.sh [target library] [test binary] [source code directory]
+```
+
+## How to use Seed Maker
+```
+$ ./seed_maker.py [collect file] [output directory]
 ```
