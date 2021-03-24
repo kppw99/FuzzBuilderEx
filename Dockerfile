@@ -26,13 +26,13 @@ RUN mkdir -p tool && cd /tool && \
     make
 
 # Install FuzzBuilder
-COPY fuzzbuilder/src/ /fuzzbuilder
+COPY source/src/ /fuzzbuilder
 RUN mkdir -p /fuzzbuilder/build && \
     cd /fuzzbuilder/build && \
     cmake build .. && \
     make && \
     mv /fuzzbuilder/build/fuzzbuilder /tool/
-COPY fuzzbuilder/script/ /tool/
+COPY source/script/ /tool/
 
 # Install OSS-Fuzz
 RUN mkdir -p /exp/oss-fuzz && cd /exp/oss-fuzz && \
