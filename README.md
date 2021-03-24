@@ -5,16 +5,13 @@
 ![abstract](https://user-images.githubusercontent.com/48042609/112237303-bcbd6580-8c85-11eb-9de2-a077e1992660.png)
 
 ## Prerequisite
-```
-- OS: Ubuntu (18.04 LTS)
-- Container: Docker (19.03.6)
-```
+- **OS:** Ubuntu (18.04 LTS)
+- **Container:** Docker (19.03.6)
+
 
 ## Description of Directory
-```
-- source: source code of fuzzbuilderex
-- projects: target librares
-```
+- **source:** source code of fuzzbuilderex
+- **projects:** target librares
 
 ## About
 This program is authored and maintained by **Sanghoon(Kevin) Jeon**, **Min Soo Ryu**, and **Dong Young Kim**.
