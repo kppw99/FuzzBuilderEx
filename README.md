@@ -10,11 +10,11 @@
 
 
 ## Description of Directory
-(D: directory / F: file)
-- **source:** [D] source code of fuzzbuilderex
-- **projects:** [D] target librares
-- **Dockerfile:** [F] dockerfile for base environment such as os, LLVM, AFL, utils
-- **runner.sh:** [F] script file to build target library
+*(D: directory / F: file)
+- **[D] source:** source code of fuzzbuilderex
+- **[D] projects:** target librares
+- **[F] Dockerfile:** dockerfile for base environment such as os, LLVM, AFL, utils
+- **[F] runner.sh:** script file to build target library
 ```
 $ ./runner.sh [project name]
 ```
