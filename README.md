@@ -42,7 +42,7 @@ TBD
 ```
 
 ## About
-This program is authored and maintained by **Sanghoon(Kevin) Jeon**, **Min Soo Ryu**, and **Dong Young Kim**.
+This program is authored and maintained by **Sanghoon(Kevin) Jeon**, **Minsoo Ryu**, and **Dongyoung Kim**.
 > Email: kppw99@gmail.com, onsoim@gmail.com, ehddud758@gmail.com
 
 > GitHub[@FuzzBuilderEx](https://github.com/kppw99/FuzzBuilderEx)
