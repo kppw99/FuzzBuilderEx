@@ -1,5 +1,5 @@
 [![DOI](https://zenodo.org/badge/310195829.svg)](https://zenodo.org/badge/latestdoi/310195829)
-# FuzzBuilderEx: Automated Building Seed Corpus and Fuzzing Executables using Test Framework
+# FuzzBuilderEx: Automatically Seed Corpus and Fuzzing Executables Generation Using Test Framework
 ![FuzzBuilderEx](https://user-images.githubusercontent.com/48042609/112240130-16745e80-8c8b-11eb-9d7f-95436646cfec.png)
 
 ## Abstract
@@ -34,10 +34,14 @@ $ ./fuzzbuilderex exec [configuration file]
 
 ## Publications
 ```
-FuzzBuilderEx: Automated Building Seed Corpus and Fuzzing Executables using Test Framework
+Automatically Seed Corpus and Fuzzing Executables Generation Using Test Framework
 
-@article{
-TBD
+@article{jeon2022automatically,
+  title={Automatically Seed Corpus and Fuzzing Executables Generation Using Test Framework},
+  author={Jeon, Sanghoon and Ryu, Minsoo and Kim, Dongyoung and Kim, Huy Kang},
+  journal={IEEE Access},
+  year={2022},
+  publisher={IEEE}
 }
 ```
 
